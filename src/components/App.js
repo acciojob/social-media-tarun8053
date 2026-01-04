@@ -8,7 +8,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-/* -------------------- INITIAL DATA -------------------- */
+/* -------------------- DATA -------------------- */
 
 const users = [
   { id: 1, name: "User 1" },
@@ -26,7 +26,7 @@ const initialPosts = [
   },
 ];
 
-/* -------------------- POSTS PAGE -------------------- */
+/* -------------------- POSTS -------------------- */
 
 function Posts({ posts, setPosts }) {
   const [title, setTitle] = useState("");
@@ -36,6 +36,7 @@ function Posts({ posts, setPosts }) {
 
   const addPost = (e) => {
     e.preventDefault();
+
     const newPost = {
       id: Date.now(),
       title,
@@ -43,6 +44,7 @@ function Posts({ posts, setPosts }) {
       userId: Number(author),
       reactions: [0, 0, 0, 0, 0],
     };
+
     setPosts([posts[0], newPost]);
     setTitle("");
     setAuthor("");
@@ -61,10 +63,10 @@ function Posts({ posts, setPosts }) {
       <h1>GenZ</h1>
 
       <nav className="App">
-        <a href="/">Posts</a>
-        <a href="/users">Users</a>
-        <a href="/notifications">Notifications</a>
-        <a href="/">Create</a>
+        <Link to="/">Posts</Link>
+        <Link to="/users">Users</Link>
+        <Link to="/notifications">Notifications</Link>
+        <Link to="/">Create</Link>
       </nav>
 
       <form onSubmit={addPost}>
@@ -73,6 +75,7 @@ function Posts({ posts, setPosts }) {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
+
         <select
           id="postAuthor"
           value={author}
@@ -85,11 +88,13 @@ function Posts({ posts, setPosts }) {
             </option>
           ))}
         </select>
+
         <textarea
           id="postContent"
           value={content}
           onChange={(e) => setContent(e.target.value)}
         />
+
         <button type="submit">Save Post</button>
       </form>
 
@@ -124,8 +129,14 @@ function Posts({ posts, setPosts }) {
 
 function PostDetail({ posts, setPosts }) {
   const { id } = useParams();
-  const post = posts.find((p) => p.id === Number(id));
   const navigate = useNavigate();
+
+  const post = posts.find((p) => p.id === Number(id));
+
+  if (!post) {
+    return <div className="post">Post Not Found</div>;
+  }
+
   const [edit, setEdit] = useState(false);
   const [title, setTitle] = useState(post.title);
   const [content, setContent] = useState(post.content);
@@ -213,9 +224,9 @@ function Notifications() {
   );
 }
 
-/* -------------------- APP -------------------- */
+/* -------------------- APP (EXPORT HERE) -------------------- */
 
-export default function App() {
+function App() {
   const [posts, setPosts] = useState(initialPosts);
 
   return (
@@ -232,3 +243,5 @@ export default function App() {
     </BrowserRouter>
   );
 }
+
+export default App;
